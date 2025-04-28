@@ -1,0 +1,97 @@
+1) DFS REC
+Read graph edges from a CSV file and build a graph.
+Perform DFS recursively:
+Start from a given node.
+Visit a node, mark it visited.
+Recursively visit its neighbors.
+Print the order of visited nodes.
+
+2)DFS NON REC
+Create an empty graph.
+Take user input to add edges.
+Display the graph.
+Take user input for starting node.
+Perform Non-Recursive DFS:
+Use a stack to simulate recursion.
+Pop, Visit, and Push neighbors.
+Print the visiting order.
+
+3) BFS
+Create an empty graph.
+Take user input to add edges.
+Display the graph.
+Take user input for starting node.
+Perform BFS:
+Use a queue to explore nodes level by level.
+Visit node, mark visited.
+Enqueue neighbors.
+Print the visiting order.
+
+4) Best First Search
+Input Graph and Heuristic Values:
+Take the number of nodes and edges from the user.
+Collect heuristic values for each node.
+Build the graph from the edges provided by the user.
+Best-First Search:
+Initialize a priority queue with the start node and its heuristic value.
+While the queue is not empty:
+Pop the node with the smallest heuristic value.
+If it's the goal node, return the path.
+Add its neighbors (with their heuristic values) to the queue.
+Output:
+If a path exists, print it; otherwise, indicate no path was found.
+
+5)A*
+Initialization:
+Start by initializing the open list with the start node's heuristic.
+Set the g_costs (cost to reach nodes) and parent dictionary.
+Search Loop:
+While the open list is not empty:
+Pop the node with the smallest f-cost.
+If the node is the goal, reconstruct the path using the parent dictionary.
+Otherwise, check each neighbor and update the g-cost and f-cost, pushing neighbors into the open list if they offer a shorter path.
+Return:
+If the goal is reached, return the path from start to goal.
+If no path exists, return None.
+
+6)Fuzzy Sets
+Input Fuzzy Set:
+Input the number of elements in the fuzzy set.
+For each element, input its name and its membership value (a float between 0 and 1).
+Store the elements and their membership values in a dictionary (or hash map).
+Fuzzy Set Operations:
+Union of two fuzzy sets (setA ∪ setB):
+Intersection of two fuzzy sets (setA ∩ setB):
+Complement of a fuzzy set (¬setA):
+Main Function:
+Input three fuzzy sets (Set 1, Set 2, Set 3).
+Perform pairwise union and intersection for these sets (Set 1 ∪ Set 2, Set 1 ∩ Set 2, etc.).
+Perform the union and intersection of all three sets.
+Calculate the complement of each fuzzy set.
+Display the results.
+
+7) MLP
+Initialize random weights (W1, W2, W3) and biases (b1, b2, b3).
+Generate random binary input X and output Y.
+For each training step (up to 1000):
+Perform forward pass to compute the hidden layer outputs and final output.
+Print intermediate results every 100 steps.
+Return the final weights, biases, and number of steps taken.
+
+8) Sigmoid/RelU/tanH
+Initialize random weights and biases
+ For each epoch:
+    a. Do a forward pass (calculate outputs using sigmoid)
+    b. Calculate loss (difference between predicted and actual)
+    c. Perform backpropagation (compute gradients)
+    d. Update weights and biases using gradients
+After training, output final weights and biases
+
+
+
+
+
+
+
+
+
