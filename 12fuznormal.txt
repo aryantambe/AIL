@@ -1,0 +1,70 @@
+# Function to take fuzzy set input from user
+def input_fuzzy_set(name):
+    fuzzy_set = {}
+    n = int(input(f"Enter the number of elements in {name}: "))
+    for _ in range(n):
+        element = input(f"Enter element name: ")
+        membership = float(input(f"Enter membership value for {element} (between 0 and 1): "))
+        fuzzy_set[element] = membership
+    return fuzzy_set
+
+# Fuzzy set operations
+def fuzzy_union(setA, setB):
+    return {x: max(setA.get(x, 0), setB.get(x, 0)) for x in set(setA) | set(setB)}
+
+def fuzzy_intersection(setA, setB):
+    return {x: min(setA.get(x, 0), setB.get(x, 0)) for x in set(setA) | set(setB)}
+
+def fuzzy_complement(setA):
+    return {x: round(1 - membership, 2) for x, membership in setA.items()}
+
+# Main program
+print("Enter details for Fuzzy Set 1:")
+fuzzy_set1 = input_fuzzy_set("Fuzzy Set 1")
+
+print("\nEnter details for Fuzzy Set 2:")
+fuzzy_set2 = input_fuzzy_set("Fuzzy Set 2")
+
+print("\nEnter details for Fuzzy Set 3:")
+fuzzy_set3 = input_fuzzy_set("Fuzzy Set 3")
+
+# Display individual sets
+print("\nFuzzy Set 1:", fuzzy_set1)
+print("Fuzzy Set 2:", fuzzy_set2)
+print("Fuzzy Set 3:", fuzzy_set3)
+
+# Pairwise Union and Intersection
+union_12 = fuzzy_union(fuzzy_set1, fuzzy_set2)
+intersection_12 = fuzzy_intersection(fuzzy_set1, fuzzy_set2)
+
+union_23 = fuzzy_union(fuzzy_set2, fuzzy_set3)
+intersection_23 = fuzzy_intersection(fuzzy_set2, fuzzy_set3)
+
+union_13 = fuzzy_union(fuzzy_set1, fuzzy_set3)
+intersection_13 = fuzzy_intersection(fuzzy_set1, fuzzy_set3)
+
+# Union and Intersection of all three sets
+union_all = fuzzy_union(fuzzy_union(fuzzy_set1, fuzzy_set2), fuzzy_set3)
+intersection_all = fuzzy_intersection(fuzzy_intersection(fuzzy_set1, fuzzy_set2), fuzzy_set3)
+
+# Complements
+complement1 = fuzzy_complement(fuzzy_set1)
+complement2 = fuzzy_complement(fuzzy_set2)
+complement3 = fuzzy_complement(fuzzy_set3)
+
+# Display results
+print("\nUnion of Set 1 and Set 2:", union_12)
+print("Intersection of Set 1 and Set 2:", intersection_12)
+
+print("\nUnion of Set 2 and Set 3:", union_23)
+print("Intersection of Set 2 and Set 3:", intersection_23)
+
+print("\nUnion of Set 1 and Set 3:", union_13)
+print("Intersection of Set 1 and Set 3:", intersection_13)
+
+print("\nUnion of all three sets:", union_all)
+print("Intersection of all three sets:", intersection_all)
+
+print("\nComplement of Set 1:", complement1)
+print("Complement of Set 2:", complement2)
+print("Complement of Set 3:", complement3)

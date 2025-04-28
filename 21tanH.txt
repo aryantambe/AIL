@@ -1,0 +1,106 @@
+import numpy as np
+
+# Tanh activation function and its derivative
+def tanh(x):
+    return np.tanh(x)
+
+def tanh_derivative(x):
+    return 1.0 - np.tanh(x)**2
+
+# Function to initialize random weights and biases
+def initialize_weights_and_biases(input_size, hidden_layer_size_1, hidden_layer_size_2, output_size):
+    W1 = np.random.randn(input_size, hidden_layer_size_1)  # Weights from input to first hidden layer
+    W2 = np.random.randn(hidden_layer_size_1, hidden_layer_size_2)  # Weights from first hidden to second hidden layer
+    W3 = np.random.randn(hidden_layer_size_2, output_size)  # Weights from second hidden layer to output layer
+    
+    b1 = np.random.randn(hidden_layer_size_1)  # Bias for first hidden layer
+    b2 = np.random.randn(hidden_layer_size_2)  # Bias for second hidden layer
+    b3 = np.random.randn(output_size)  # Bias for output layer
+    
+    return W1, W2, W3, b1, b2, b3
+
+# Function to perform forward pass
+def forward_pass(X, W1, W2, W3, b1, b2, b3):
+    Z1 = np.dot(X, W1) + b1  # Linear combination for first hidden layer
+    A1 = tanh(Z1)  # Tanh activation
+    
+    Z2 = np.dot(A1, W2) + b2  # Linear combination for second hidden layer
+    A2 = tanh(Z2)  # Tanh activation
+    
+    Z3 = np.dot(A2, W3) + b3  # Linear combination for output layer
+    A3 = tanh(Z3)  # Tanh activation (output layer)
+    
+    return A1, A2, A3, Z1, Z2, Z3
+
+# Function to perform backpropagation and update weights
+def backpropagate(X, Y, A1, A2, A3, Z1, Z2, Z3, W1, W2, W3, b1, b2, b3, learning_rate):
+    m = X.shape[0]  # Number of training examples
+    
+    # Compute the error at the output layer
+    dA3 = A3 - Y
+    dZ3 = dA3 * tanh_derivative(A3)
+    dW3 = np.dot(A2.T, dZ3) / m
+    db3 = np.sum(dZ3, axis=0) / m
+    
+    # Compute the error at the second hidden layer
+    dA2 = np.dot(dZ3, W3.T)
+    dZ2 = dA2 * tanh_derivative(A2)
+    dW2 = np.dot(A1.T, dZ2) / m
+    db2 = np.sum(dZ2, axis=0) / m
+    
+    # Compute the error at the first hidden layer
+    dA1 = np.dot(dZ2, W2.T)
+    dZ1 = dA1 * tanh_derivative(A1)
+    dW1 = np.dot(X.T, dZ1) / m
+    db1 = np.sum(dZ1, axis=0) / m
+    
+    # Update the weights and biases using the gradient descent
+    W1 -= learning_rate * dW1
+    W2 -= learning_rate * dW2
+    W3 -= learning_rate * dW3
+    b1 -= learning_rate * db1
+    b2 -= learning_rate * db2
+    b3 -= learning_rate * db3
+    
+    return W1, W2, W3, b1, b2, b3
+
+# Function to train the MLP
+def train_mlp(X, Y, input_size, hidden_layer_size_1, hidden_layer_size_2, output_size, epochs=1000, learning_rate=0.01):
+    W1, W2, W3, b1, b2, b3 = initialize_weights_and_biases(input_size, hidden_layer_size_1, hidden_layer_size_2, output_size)
+    
+    for epoch in range(epochs):
+        # Perform forward pass
+        A1, A2, A3, Z1, Z2, Z3 = forward_pass(X, W1, W2, W3, b1, b2, b3)
+        
+        # Perform backpropagation and update weights and biases
+        W1, W2, W3, b1, b2, b3 = backpropagate(X, Y, A1, A2, A3, Z1, Z2, Z3, W1, W2, W3, b1, b2, b3, learning_rate)
+        
+        # Display the loss (mean squared error) every 100 epochs
+        if epoch % 100 == 0:
+            loss = np.mean((A3 - Y) ** 2)
+            print(f"Epoch {epoch}, Loss: {loss}")
+    
+    return W1, W2, W3, b1, b2, b3
+
+# Example of usage
+# Define the input size (N), hidden layer sizes, and output size
+input_size = 4  # Number of binary inputs
+hidden_layer_size_1 = 5  # Number of neurons in the first hidden layer
+hidden_layer_size_2 = 3  # Number of neurons in the second hidden layer
+output_size = 1  # Number of binary outputs (1 output)
+
+# Create random binary input data (X) and binary output data (Y)
+X = np.random.randint(0, 2, (10, input_size))  # 10 samples, 4 binary inputs each
+Y = np.random.randint(0, 2, (10, output_size))  # 10 samples, 1 binary output each
+
+# Train the MLP and get the final weights and biases
+W1, W2, W3, b1, b2, b3 = train_mlp(X, Y, input_size, hidden_layer_size_1, hidden_layer_size_2, output_size, epochs=1000, learning_rate=0.01)
+
+# Display final weight matrices and biases
+print("\nFinal Weights and Biases after training:")
+print("W1 (Input to First Hidden Layer):\n", W1)
+print("W2 (First Hidden Layer to Second Hidden Layer):\n", W2)
+print("W3 (Second Hidden Layer to Output Layer):\n", W3)
+print("b1 (Bias for First Hidden Layer):\n", b1)
+print("b2 (Bias for Second Hidden Layer):\n", b2)
+print("b3 (Bias for Output Layer):\n", b3)

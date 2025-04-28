@@ -1,0 +1,70 @@
+import re
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk.corpus import stopwords
+from nltk.util import ngrams
+
+# Download necessary NLTK data files (only once)
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+
+# Function to clean the text
+def clean_text(text):
+    # Remove punctuation, numbers, and special characters using regular expression
+    text = re.sub(r'[^A-Za-z\s]', '', text)
+    
+    # Remove extra white spaces
+    text = re.sub(r'\s+', ' ', text).strip()
+    
+    return text
+
+# Function to convert text to lowercase
+def convert_to_lowercase(text):
+    return text.lower()
+
+# Function to perform stemming and lemmatization
+def stem_and_lemmatize(text):
+    # Initialize stemmer and lemmatizer
+    stemmer = PorterStemmer()
+    lemmatizer = WordNetLemmatizer()
+    
+    # Tokenize the text
+    tokens = word_tokenize(text)
+    
+    # Stemming and Lemmatization
+    stemmed_words = [stemmer.stem(word) for word in tokens if word not in stopwords.words('english')]
+    lemmatized_words = [lemmatizer.lemmatize(word) for word in tokens if word not in stopwords.words('english')]
+    
+    return stemmed_words, lemmatized_words
+
+# Function to generate 3 consecutive words (trigrams) after lemmatization
+def generate_trigrams(lemmatized_words):
+    # Generate trigrams (3 consecutive words)
+    trigrams = list(ngrams(lemmatized_words, 3))
+    return trigrams
+
+# Read the text from the sample file
+with open("file1.txt", "r") as file:
+    text = file.read()
+
+# 1. Clean the text
+cleaned_text = clean_text(text)
+
+# 2. Convert the text to lowercase
+lowercase_text = convert_to_lowercase(cleaned_text)
+
+# 3. Perform stemming and lemmatization
+stemmed_words, lemmatized_words = stem_and_lemmatize(lowercase_text)
+
+# 4. Create a list of 3 consecutive words after lemmatization (trigrams)
+trigrams = generate_trigrams(lemmatized_words)
+
+# Output the results
+print("Original Text:\n", text)
+print("\nCleaned Text:\n", cleaned_text)
+print("\nLowercase Text:\n", lowercase_text)
+print("\nStemmed Words:\n", stemmed_words)
+print("\nLemmatized Words:\n", lemmatized_words)
+print("\nTrigrams:\n", trigrams)

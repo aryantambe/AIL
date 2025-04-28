@@ -1,0 +1,75 @@
+import numpy as np
+
+# Function to initialize random weights and biases
+def initialize_weights_and_biases(input_size, hidden_layer_size1, hidden_layer_size2, output_size):
+    # Initialize weights with random values
+    W1 = np.random.randn(input_size, hidden_layer_size1)  # Weights for input to first hidden layer
+    W2 = np.random.randn(hidden_layer_size1, hidden_layer_size2)  # Weights for first to second hidden layer
+    W3 = np.random.randn(hidden_layer_size2, output_size)  # Weights for second hidden layer to output layer
+    
+    # Initialize biases with random values
+    b1 = np.random.randn(hidden_layer_size1)  # Bias for first hidden layer
+    b2 = np.random.randn(hidden_layer_size2)  # Bias for second hidden layer
+    b3 = np.random.randn(output_size)  # Bias for output layer
+    
+    return W1, W2, W3, b1, b2, b3
+
+# Function to perform forward pass (no activation function)
+def forward_pass(X, W1, W2, W3, b1, b2, b3):
+    # First hidden layer
+    Z1 = np.dot(X, W1) + b1
+    # Second hidden layer
+    Z2 = np.dot(Z1, W2) + b2
+    # Output layer
+    Z3 = np.dot(Z2, W3) + b3
+    return Z1, Z2, Z3
+
+# Function to perform training (using random input and output data)
+def train_mlp(input_size, hidden_layer_size1, hidden_layer_size2, output_size, steps=1000):
+    # Initialize random weights and biases
+    W1, W2, W3, b1, b2, b3 = initialize_weights_and_biases(input_size, hidden_layer_size1, hidden_layer_size2, output_size)
+    
+    # Random binary inputs and outputs (for simplicity)
+    X = np.random.randint(0, 2, (1, input_size))  # 1 sample with N binary inputs
+    Y = np.random.randint(0, 2, (1, output_size))  # 1 binary output
+    
+    for step in range(steps):
+        # Forward pass
+        Z1, Z2, Z3 = forward_pass(X, W1, W2, W3, b1, b2, b3)
+        
+        # Displaying intermediate results every 100 steps
+        if step % 100 == 0:
+            print(f"Step {step}:")
+            print(f"Input (X): {X}")
+            print(f"Output (Y): {Y}")
+            print(f"Hidden Layer 1 Output (Z1): {Z1}")
+            print(f"Hidden Layer 2 Output (Z2): {Z2}")
+            print(f"Output Layer (Z3): {Z3}")
+            print(f"Weights (W1): {W1}")
+            print(f"Weights (W2): {W2}")
+            print(f"Weights (W3): {W3}")
+            print(f"Biases (b1): {b1}")
+            print(f"Biases (b2): {b2}")
+            print(f"Biases (b3): {b3}")
+            print()
+        
+    # Return final weight matrices, biases, and steps
+    return W1, W2, W3, b1, b2, b3, steps
+
+# Example of usage
+input_size = 4  # Number of binary inputs (N)
+hidden_layer_size1 = 5  # Size of first hidden layer
+hidden_layer_size2 = 3  # Size of second hidden layer
+output_size = 1  # Binary output
+
+# Train the MLP and display the results
+W1, W2, W3, b1, b2, b3, steps = train_mlp(input_size, hidden_layer_size1, hidden_layer_size2, output_size, steps=1000)
+
+print(f"Final Weights (W1):\n{W1}")
+print(f"Final Weights (W2):\n{W2}")
+print(f"Final Weights (W3):\n{W3}")
+print(f"Final Biases (b1):\n{b1}")
+print(f"Final Biases (b2):\n{b2}")
+print(f"Final Biases (b3):\n{b3}")
+print(f"Total Steps: {steps}")
+

@@ -1,0 +1,65 @@
+import pandas as pd
+import numpy as np
+
+# TF-IDF function
+def tf_idf(documents, vocabulary):
+    num_docs = len(documents)
+    num_terms = len(vocabulary)
+    tf_idf_matrix = np.zeros((num_docs, num_terms))
+
+    for i, doc in enumerate(documents):
+        print("TF for the given sentences are as follows")
+        word_counts = np.zeros(len(vocabulary))
+        words = doc.lower().split()
+        for word in words:
+            try:
+                index = vocabulary.index(word)
+                word_counts[index] += 1
+            except ValueError:
+                pass
+        tf = word_counts / len(words) if len(words) > 0 else word_counts
+        print("\n", words)
+        print(tf.round(2))
+
+        idf = np.zeros(num_terms)
+        for j in range(num_terms):
+            term = vocabulary[j]
+            doc_count = 0
+            for doc_k in documents:
+                if term in doc_k.lower().split():
+                    doc_count += 1
+            idf[j] = np.log(num_docs / (1 + doc_count))
+
+        tf_idf_matrix[i] = tf * idf
+
+    df = pd.DataFrame(tf_idf_matrix, columns=vocabulary)
+    return df
+
+# ----------- Load Text Files -----------
+with open("file1.txt", "r") as file1:
+    doc1 = file1.read()
+
+with open("file2.txt", "r") as file2:
+    doc2 = file2.read()
+
+with open("file3.txt", "r") as file3:
+    doc3 = file3.read()
+
+documents = [doc1, doc2, doc3]
+
+# ----------- Generate Vocabulary Automatically -----------
+# Split all documents into words
+all_words = []
+for doc in documents:
+    all_words.extend(doc.lower().split())
+
+# Remove duplicates by converting to a set, then back to a list
+vocabulary = list(set(all_words))
+print("\nGenerated Vocabulary:", vocabulary)
+
+# ----------- TF-IDF Calculation -----------
+tf_idf_result = tf_idf(documents, vocabulary)
+
+# ----------- Display the result -----------
+print("\nTF-IDF Matrix:")
+print(tf_idf_result.round(2))

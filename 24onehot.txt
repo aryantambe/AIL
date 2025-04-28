@@ -1,0 +1,35 @@
+import pandas as pd
+import string
+
+def one_hot_encode(text, vocabulary):
+    encoded_data = {}
+    for word in vocabulary:
+        encoded_data[word] = []
+    
+    for word in text.split():
+        vector = [0] * len(vocabulary)
+        if word in vocabulary:
+            vector[vocabulary.index(word)] = 1
+        for i, vocab_word in enumerate(vocabulary):
+            encoded_data[vocab_word].append(vector[i])
+    
+    df = pd.DataFrame(encoded_data, index=text.split())
+    return df
+
+file1 = open("file1.txt", "r").read()
+file2 = open("file2.txt", "r").read()
+file3 = open("file3.txt", "r").read()
+
+text = file1 + " " + file2 + " " + file3
+
+print(text)
+
+vocabulary = list(set(text.lower().split()))
+vocabulary.sort()
+
+
+# 👉 Apply One-Hot Encoding
+encoded_df = one_hot_encode(text.lower(), vocabulary)
+
+# 👉 Print the result
+print(encoded_df)

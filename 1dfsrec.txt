@@ -1,0 +1,32 @@
+import networkx as nx
+import csv
+import matplotlib.pyplot as plt
+
+def load_graph_from_csv(file_path):
+  G = nx.Graph()
+  with open("sd.csv", 'r') as file:
+    reader = csv.reader(file)
+    next(reader)
+    for row in reader:
+      source, dest = row
+      G.add_edge(source, dest)
+  return G
+  
+def dfs_recursive(graph, node, visited, sequence):
+  if node not in visited:
+    sequence.append(node)
+    visited.add(node)
+    for neighbor in graph.neighbors(node):
+      dfs_recursive(graph, neighbor, visited, sequence)
+
+
+graph = load_graph_from_csv('graph_edges.csv')
+
+print("Input Graph Edges")
+print(graph.edges())
+
+print("Recursive DFS")
+visited_set = set()
+rec_seq = []
+dfs_recursive(graph, 'A', visited_set, rec_seq)
+print(' '.join(rec_seq))

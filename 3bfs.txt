@@ -1,0 +1,36 @@
+import networkx as nx
+from collections import deque  # Needed for BFS queue
+
+def bfs(graph, start_node):
+    visited = set()
+    seq = []
+    queue = deque([start_node])  # Use queue for BFS
+    while queue:
+        node = queue.popleft()  # Pop from front
+        if node not in visited:
+            seq.append(node)
+            visited.add(node)
+            queue.extend(graph.neighbors(node))  # Add all neighbors
+    return seq
+
+# Initialize empty graph
+graph = nx.Graph()
+
+# Add edges manually
+while True:
+    print("1: add edge  2: break")
+    a = int(input("Enter operation: "))
+    if a == 2:
+        break
+    if a == 1:
+        x = input("Enter source node: ")
+        y = input("Enter destination node: ")
+        graph.add_edge(x, y)
+
+print("\nInput Graph Edges:")
+print(graph.edges())
+
+print("\nBFS Traversal")
+start_node = input("Enter starting node for BFS: ")
+bfs_seq = bfs(graph, start_node)
+print(' '.join(bfs_seq))

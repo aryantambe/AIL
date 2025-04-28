@@ -1,0 +1,84 @@
+import heapq
+import csv
+def read_graph_from_csv(edges_file, heuristics_file):
+    graph = {}
+    heuristics = {}
+    
+    # Read edges - let user specify the columns for edge information
+    with open(edges_file, mode='r') as f:
+        reader = csv.DictReader(f)
+        edge_columns = reader.fieldnames
+        
+        # Ask user for the column names for the edges
+        start_column = input(f"Enter the column name for the start node (Available: {', '.join(edge_columns)}): ").strip()
+        end_column = input(f"Enter the column name for the end node (Available: {', '.join(edge_columns)}): ").strip()
+        weight_column = input(f"Enter the column name for the weight (Available: {', '.join(edge_columns)}): ").strip()
+
+        for row in reader:
+            start, end, weight = row[start_column], row[end_column], int(row[weight_column])
+            if start not in graph:
+                graph[start] = []
+            graph[start].append((end, weight))
+    
+    # Read heuristics - let user specify the columns for heuristics
+    with open(heuristics_file, mode='r') as f:
+        reader = csv.DictReader(f)
+        heuristic_columns = reader.fieldnames
+        
+        # Ask user for the column names for heuristics
+        vertex_column = input(f"Enter the column name for the vertex (Available: {', '.join(heuristic_columns)}): ").strip()
+        heuristic_column = input(f"Enter the column name for the heuristic (Available: {', '.join(heuristic_columns)}): ").strip()
+
+        for row in reader:
+            heuristics[row[vertex_column]] = int(row[heuristic_column])
+    
+    return graph, heuristics
+
+# A* Algorithm
+def a_star(graph, heuristics, start, goal):
+    open_list = []
+    heapq.heappush(open_list, (heuristics[start], start))
+    g_costs = {start: 0}  # Actual cost from start
+    parent = {start: None}
+    
+    while open_list:
+        _, current = heapq.heappop(open_list)
+        
+        if current == goal:
+            path = []
+            while current is not None:
+                path.append(current)
+                current = parent[current]
+            return path[::-1]
+        
+        for neighbor, weight in graph.get(current, []):
+            g_cost = g_costs[current] + weight
+            if neighbor not in g_costs or g_cost < g_costs[neighbor]:
+                g_costs[neighbor] = g_cost
+                f_cost = g_cost + heuristics[neighbor]
+                heapq.heappush(open_list, (f_cost, neighbor))
+                parent[neighbor] = current
+    
+    return None
+
+# Main Function
+def main():
+    graph_file = "edges.csv"
+    heuristics_file = "heuristic.csv"
+    
+    # Read graph and heuristics from CSV files
+    graph, heuristics = read_graph_from_csv(graph_file, heuristics_file)
+    
+    start = input("Enter the start vertex: ").strip()
+    goal = input("Enter the goal vertex: ").strip()
+    
+    path = a_star(graph, heuristics, start, goal)
+    
+    if path:
+        print("Path found:", " -> ".join(path))
+    else:
+        print("No path found.")
+
+if __name__ == "__main__":
+    main()
+

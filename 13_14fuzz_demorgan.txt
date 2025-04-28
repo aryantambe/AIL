@@ -1,0 +1,68 @@
+# Function to take fuzzy set input from user
+def input_fuzzy_set(name):
+    fuzzy_set = {}
+    n = int(input(f"Enter the number of elements in {name}: "))
+    for _ in range(n):
+        element = input(f"Enter element name: ")
+        membership = float(input(f"Enter membership value for {element} (between 0 and 1): "))
+        fuzzy_set[element] = membership
+    return fuzzy_set
+
+# Fuzzy set operations
+def fuzzy_union(setA, setB):
+    return {x: max(setA.get(x, 0), setB.get(x, 0)) for x in set(setA) | set(setB)}
+
+def fuzzy_intersection(setA, setB):
+    return {x: min(setA.get(x, 0), setB.get(x, 0)) for x in set(setA) | set(setB)}
+
+def fuzzy_complement(fuzzy_set):
+    return {x: round(1 - membership, 2) for x, membership in fuzzy_set.items()}
+
+# Main program
+print("Enter details for Fuzzy Set 1:")
+fuzzy_set1 = input_fuzzy_set("Fuzzy Set 1")
+
+print("\nEnter details for Fuzzy Set 2:")
+fuzzy_set2 = input_fuzzy_set("Fuzzy Set 2")
+
+# Display individual sets
+print("\nFuzzy Set 1:", fuzzy_set1)
+print("Fuzzy Set 2:", fuzzy_set2)
+
+# Perform operations
+union = fuzzy_union(fuzzy_set1, fuzzy_set2)
+intersection = fuzzy_intersection(fuzzy_set1, fuzzy_set2)
+
+complement_set1 = fuzzy_complement(fuzzy_set1)
+complement_set2 = fuzzy_complement(fuzzy_set2)
+
+# De Morgan's Law demonstration
+complement_of_union = fuzzy_complement(union)
+intersection_of_complements = fuzzy_intersection(complement_set1, complement_set2)
+
+complement_of_intersection = fuzzy_complement(intersection)
+union_of_complements = fuzzy_union(complement_set1, complement_set2)
+
+# Display results
+print("\nUnion of Set 1 and Set 2:", union)
+print("Intersection of Set 1 and Set 2:", intersection)
+
+print("\nComplement of Set 1:", complement_set1)
+print("Complement of Set 2:", complement_set2)
+
+print("\nComplement of Union ( (A ∪ B)' ):", complement_of_union)
+print("Intersection of Complements ( A' ∩ B' ):", intersection_of_complements)
+
+print("\nComplement of Intersection ( (A ∩ B)' ):", complement_of_intersection)
+print("Union of Complements ( A' ∪ B' ):", union_of_complements)
+
+# Check if De Morgan’s laws hold
+if complement_of_union == intersection_of_complements:
+    print("\nDe Morgan's Law 1 Verified: (A ∪ B)' = A' ∩ B'")
+else:
+    print("\nDe Morgan's Law 1 Not Verified: (A ∪ B)' ≠ A' ∩ B'")
+
+if complement_of_intersection == union_of_complements:
+    print("De Morgan's Law 2 Verified: (A ∩ B)' = A' ∪ B'")
+else:
+    print("De Morgan's Law 2 Not Verified: (A ∩ B)' ≠ A' ∪ B'")

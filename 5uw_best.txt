@@ -1,0 +1,52 @@
+import heapq
+
+def read_graph_from_user():
+    graph = {}
+    heuristic = {}
+
+    num_nodes = int(input("Enter number of nodes: "))
+    for _ in range(num_nodes):
+        node = input("Enter node name: ").strip()
+        h = int(input(f"Enter heuristic value for {node}: "))
+        heuristic[node] = h
+        graph[node] = []
+
+    num_edges = int(input("Enter number of edges: "))
+    for _ in range(num_edges):
+        src = input("Enter source node: ").strip()
+        dest = input("Enter destination node: ").strip()
+        weight = int(input(f"Enter weight from {src} to {dest}: "))
+        graph[src].append((dest, weight))
+        graph[dest].append((src, weight))  # undirected
+
+    return graph, heuristic
+
+def best_first_search(graph, start, goal, heuristic):
+    open_list = []
+    heapq.heappush(open_list, (heuristic[start], [start]))
+
+    while open_list:
+        _, path = heapq.heappop(open_list)
+        node = path[-1]
+
+        if node == goal:
+            return path
+
+        for neighbor, _ in graph.get(node, []):
+            if neighbor not in path:
+                heapq.heappush(open_list, (heuristic[neighbor], path + [neighbor]))
+
+    return None
+
+graph, heuristic = read_graph_from_user()
+start = input("Enter the start node: ").strip()
+goal = input("Enter the goal node: ").strip()
+
+if start in graph and goal in graph:
+    path = best_first_search(graph, start, goal, heuristic)
+    if path:
+        print("Path from {} to {}: {}".format(start, goal, ' -> '.join(path)))
+    else:
+        print("No path found from {} to {}.".format(start, goal))
+else:
+    print("Invalid start or goal node.")
